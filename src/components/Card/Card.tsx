@@ -3,10 +3,9 @@ import { Report } from "../../model/report";
 
 interface CardProps {
   report: Report;
-  previousReport: Report | undefined;
 }
 
-export function Card({ report, previousReport }: CardProps) {
+export function Card({ report}: CardProps) {
   return (
     <div className="card">
       <span>

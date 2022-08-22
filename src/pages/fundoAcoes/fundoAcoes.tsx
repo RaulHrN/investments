@@ -12,9 +12,10 @@ export function FundoAcoes() {
         return (
           <section key={index}>
             <h1>{investment.description}</h1>
+            <p></p>
             <div>
               {investment.reports.map((report, index: number) => {
-                return <Card report={report} previousReport = {investment.reports[index-1]} key={index} />;
+                return <Card report={report} key={index} />;
               })}
             </div>
           </section>
