@@ -1,4 +1,4 @@
-import { Investment } from "../model/investiment";
+import { Investment } from "../model/investment";
 import { Report } from "../model/report";
 import InvestmentsJson from "./investments.json";
 
@@ -24,36 +24,42 @@ const sanitizeInvestments = (investments: Response): SanitizedInvestments[] => {
         .filter((report) => investment.id === report.investmentId)
         .sort((a, b) => a.month - b.month);
 
-      const reportWithPercentage = reports.map((report, index) => {
-        let percent: number | string = 0;
-        let generalPercent: number | string = 0;
+      const firstValue: number = reports[0].value;
 
-        const firstValue = reports[0].value;
-        const lastValue = reports[reports.length - 1].value;
-        const general: string = (lastValue).toFixed(2);
+      const totalRendPerc: number | string = getPercentage(
+        reports[reports.length - 1].value,
+        firstValue
+      );
+      const totalRend: string = (
+        reports[reports.length - 1].value - firstValue
+      ).toFixed(2);
 
+      const reportPercentage = reports.map((report, index) => {
+        let reportPercentage: number = 0;
         if (reports[index - 1]) {
-          percent = getPercentage(report.value, reports[index - 1].value);
-          generalPercent = getPercentage(lastValue, firstValue);
+          reportPercentage = getPercentage(report.value, reports[index - 1].value);
         }
+
         return {
-          generalPercent,
-          general,
           ...report,
-          percent,
+          reportPercentage,
         };
       });
-      
-      return { ...investment,investments: reportWithPercentage, reports: reportWithPercentage };
+
+      return {
+        ...investment,
+        totalRend,
+        totalRendPerc,
+        reports: reportPercentage,
+      };
     });
 
-  function getPercentage(currValue: number, preValue: number) {
+  const getPercentage = (currValue: number, preValue: number) => {
     let result: number | string = (
       ((currValue - preValue) * 100) /
       preValue
     ).toFixed(2);
-    return result;
+    return Number(result);
   }
-
   return sanitizedInvestments;
 };

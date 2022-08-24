@@ -4,5 +4,5 @@ export interface Report {
     month: number;
     value: number;
     year: number;
-    percent?: number | string;
+    reportPercentage?: number;
 }
